@@ -1,0 +1,24 @@
+import mockAsyncStorage from '@react-native-async-storage/async-storage/jest/async-storage-mock';
+import { jest } from '@jest/globals';
+
+jest.mock('@react-native-async-storage/async-storage', () => mockAsyncStorage);
+jest.mock('expo-secure-store', () => ({
+  getItemAsync: jest.fn(),
+  setItemAsync: jest.fn(),
+  deleteItemAsync: jest.fn()
+}));
+jest.mock('expo-router', () => ({
+  useRouter: jest.fn(),
+  useLocalSearchParams: jest.fn(),
+  Link: 'Link'
+}));
+jest.mock('react-native-reanimated', () => require('react-native-reanimated/mock'));
+jest.mock('react-native-gesture-handler', () => {});
+global.fetch = jest.fn();
+
+const originalWarn = console.warn;
+console.warn = (message) => {
+  if (!message.includes('NativeWind')) {
+    originalWarn(message);
+  }
+};
